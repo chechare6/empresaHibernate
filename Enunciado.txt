@@ -1,0 +1,26 @@
+Realizar una gestión de empleados, proyectos y departamentos de una empresa.
+
+Estructura:
+
+La información debe contemplar los siguientes objetos -respetando los nombres-
+
+departamento (#id, nombre, jefe)
+empleado (#id, nombre, salario, nacido, departamento)
+proyectos (#id, nombre)
+sabiendo que un departamento puede tener muchos empleados, un proyecto puede tener muchos empleados, un empleado pertenece como máximo a un departamento y un empleado puede estar asignado a muchos proyectos.
+
+siendo # clave primaria y * clave ajena.
+
+Restricciones:
+
+Si un departamento desaparece los empleados pasan a departamento NULL.
+
+Si un jefe desaparece el jefe de departamento pasa a NULL.
+
+La aplicación se desarrollará con Hibernate.
+
+Entrega:
+
+Se indicará la dirección del proyecto GIT y los nombres completos de los componentes del grupo (los grupos tendrán como máximo 3 miembros).
+
+Todos los componentes entregarán.
