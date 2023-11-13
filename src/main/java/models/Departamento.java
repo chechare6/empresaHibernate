@@ -10,10 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Entity
 @Table(name = "hib_departamento")
-@NamedQueries({
-		@NamedQuery(name = "Departamento.findAll", query = "SELECT d FROM Departamento r"),
-		@NamedQuery(name = "Departamento.findByNombre", query = "SELECT d FROM Departamento d WHERE d.nombre LIKE :nombre"),
-		@NamedQuery(name = "Departamento.findByEmpleado", query = "SELECT DISTINCT d FROM Empleado e JOIN e.departamento d WHERE e.id = :id") })
+@NamedQuery(name = "Departamento.findAll", query = "SELECT d FROM Departamento r")
+@NamedQuery(name = "Departamento.findByNombre", query = "SELECT d FROM Departamento d WHERE d.nombre LIKE :nombre")
 public class Departamento {
 
 	@Id

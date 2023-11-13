@@ -9,7 +9,10 @@ import models.Proyecto;
 
 public class Menu {
 	public static void main(String[] args) {
-		HibernateManager bd = new HibernateManager();
+		//Iniciamos tablas BBDD
+		initDataBase();
+		//Creamos controlador
+		
 		Empleado e = new Empleado();
 		Departamento d = new Departamento();
 		Proyecto p = new Proyecto();
@@ -103,5 +106,11 @@ public class Menu {
 		HibernateManager.em.getTransaction().begin();
 		HibernateManager.em.persist(p.addProyectos());
 		HibernateManager.em.getTransaction().commit();
+	}
+	
+	private static void initDataBase() {
+		HibernateManager hb = HibernateManager.getInstance();
+		hb.open();
+		hb.close();
 	}
 }

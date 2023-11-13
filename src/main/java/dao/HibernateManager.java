@@ -1,7 +1,5 @@
 package dao;
 
-import org.hibernate.internal.ExceptionMapperStandardImpl;
-
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.EntityManagerFactory;
 import jakarta.persistence.EntityTransaction;
@@ -33,4 +31,6 @@ public class HibernateManager {
 		em.close();
 		emf.close();
 	}
+	
+	
 }
