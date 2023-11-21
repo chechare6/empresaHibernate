@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 
 public class EmfSingleton {
 	private static EmfSingleton ourInstance = new EmfSingleton();
-	static private final String PERSISTENCE_UNIT_NAME = "empresaDB";
+	static private final String PERSISTENCE_UNIT_NAME = "empresaPersistence";
 	private EntityManagerFactory emf = null;
 	
 	public static EmfSingleton getInstance() {

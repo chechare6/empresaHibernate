@@ -2,20 +2,33 @@ package view;
 
 import java.util.List;
 import IO.IO;
+import controller.Controller;
+import dao.EmfSingleton;
 import dao.HibernateManager;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.EntityManagerFactory;
+import jakarta.persistence.TypedQuery;
 import models.Departamento;
 import models.Empleado;
 import models.Proyecto;
+import repositories.CrudRepository;
+import repositories.departamentos.DepartamentosRepository;
+import repositories.departamentos.DepartamentosRepositoryImpl;
+import repositories.empleados.EmpleadosRepositoryImpl;
+import repositories.proyecto.ProyectoRepositoryImpl;
 
 public class Menu {
+
 	public static void main(String[] args) {
-		//Iniciamos tablas BBDD
+		// Iniciamos tablas BBDD
 		initDataBase();
-		//Creamos controlador
-		
-		Empleado e = new Empleado();
-		Departamento d = new Departamento();
-		Proyecto p = new Proyecto();
+		// Creamos controlador
+		Controller controller = new Controller(new EmpleadosRepositoryImpl(), new DepartamentosRepositoryImpl(),
+				new ProyectoRepositoryImpl());
+		EmfSingleton emfS = EmfSingleton.getInstance();
+		EntityManagerFactory emf = emfS.getEmf();
+		EntityManager em = emf.createEntityManager();
+
 		List<String> opciones = List.of("1. Ver departamentos", "2. Añadir departamentos", "3. Eliminar departamentos",
 				"4. Ver empleados", "5. Añadir empleados", "6. Eliminar empleados", "7. Ver proyectos",
 				"8. Añadir proyecto", "9. Eliminar proyecto", "0. Salir");
@@ -23,42 +36,36 @@ public class Menu {
 			System.out.println(opciones);
 			switch (IO.readString().charAt(0)) {
 			case '1':
-				verDepartamentos(d);
+				verDepartamentos(controller);
 				break;
 			case '2':
-				addDepartamento(d);
+				System.out.println("add departamentos");
 				break;
 			case '3':
-//				deleteDepartamentos(d);
 				System.out.println("deleteDepartamentos");
 				break;
 			case '4':
-				verEmpleados(e);
+				System.out.println("ver empleados");
 				break;
 			case '5':
-				addEmpleado(e);
+				System.out.println("add empleados");
 				break;
 			case '6':
-//				deleteEmpleados(e);
 				System.out.println("deleteEmpleados");
 				break;
 			case '7':
-				verProyectos(p);
+				System.out.println("ver proyectos");
 				break;
 			case '8':
-//				addProyecto(p);
 				System.out.println("addProyecto");
 				break;
 			case '9':
-//				deleteProyecto(p);
 				System.out.println("deleteProyecto");
 				break;
 			case '0':
 //				cerrarEmp(e);
 //				cerrarDep(d);
 				IO.println("CERRANDO BBDD");
-				HibernateManager.em.close();
-				HibernateManager.emf.close();
 				return;
 			default:
 				break;
@@ -66,8 +73,12 @@ public class Menu {
 		}
 	}
 
-	public static void verDepartamentos(Departamento d) {
-		System.out.println(d.toString());
+	public static void verDepartamentos(Controller controller) {
+		/* AQUI */
+		List<Departamento> departamentos = controller.getDepartamentos();
+		for (Departamento departamento : departamentos) {
+			System.out.println(departamento);
+		}
 	}
 
 	public static void verEmpleados(Empleado e) {
@@ -77,37 +88,33 @@ public class Menu {
 	public static void verProyectos(Proyecto p) {
 		System.out.println(p.toString());
 	}
-	
+
 	/**
 	 * Método para añadir departamentos a la BBDD
+	 * 
 	 * @param d
 	 */
 	public static void addDepartamento(Departamento d) {
-		HibernateManager.em.getTransaction().begin();
-		HibernateManager.em.persist(d.addDepartamento());
-		HibernateManager.em.getTransaction().commit();
 	}
-	
+
 	/**
 	 * Método para añadir empleados a la BBDD
+	 * 
 	 * @param e
 	 */
 	public static void addEmpleado(Empleado e) {
-		HibernateManager.em.getTransaction().begin();
-		HibernateManager.em.persist(e.addEmpleados());
-		HibernateManager.em.getTransaction().commit();
+
 	}
-	
+
 	/**
 	 * Método para añadir proyectos a la BBDD
+	 * 
 	 * @param p
 	 */
 	public static void addProyecto(Proyecto p) {
-		HibernateManager.em.getTransaction().begin();
-		HibernateManager.em.persist(p.addProyectos());
-		HibernateManager.em.getTransaction().commit();
+
 	}
-	
+
 	private static void initDataBase() {
 		HibernateManager hb = HibernateManager.getInstance();
 		hb.open();

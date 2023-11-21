@@ -1,4 +1,4 @@
 CREATE TABLE IF NOT EXISTS hib_departamento (id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, nombre varchar(50) NOT NULL UNIQUE, jefe int(11) DEFAULT NULL);
-CREATE TABLE IF NOT EXISTS hib_empleado (id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, nombre varchar(100) NOT NULL, salario decimal(10,2) DEFAULT NULL, departamento int(11) DEFAULT NULL, FOREIGN KEY (departamento) REFERENCES hib_departamento(id) ON DELETE SET NULL ON UPDATE CASCADE);
+CREATE TABLE IF NOT EXISTS hib_empleado (id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, nombre varchar(100) NOT NULL, salario decimal(10,2) NOT NULL, nacimiento DATE NOT NULL, departamento int(11) DEFAULT NULL, FOREIGN KEY (departamento) REFERENCES hib_departamento(id) ON DELETE SET NULL ON UPDATE CASCADE);
 ALTER TABLE hib_departamento ADD FOREIGN KEY IF NOT EXISTS (jefe) REFERENCES hib_empleado(id) ON DELETE SET NULL ON UPDATE CASCADE;
 CREATE TABLE IF NOT EXISTS hib_proyecto (id int(11) NOT NULL AUTO_INCREMENT PRIMARY KEY, nombre varchar(100) NOT NULL);
