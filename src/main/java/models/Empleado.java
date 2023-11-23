@@ -13,6 +13,7 @@
 	@NoArgsConstructor
 	@Entity
 	@Table(name = "hib_empleado")
+	@NamedQuery(name = "Empleado.findAll", query = "SELECT e FROM Empleado e")
 	@NamedQuery(name = "Empleado.noDepartamento", query = "SELECT e FROM Empleado e WHERE e.departamento IS NULL")
 	public class Empleado {
 	
@@ -28,7 +29,7 @@
 		@Temporal(TemporalType.DATE)
 		private Date nacimiento;
 	
-		@ManyToOne(fetch = FetchType.LAZY)
+		@ManyToOne
 	    @JoinColumn(name = "departamento")
 	    private Departamento departamento;
 	
@@ -48,8 +49,7 @@
 	
 		@Override
 		public String toString() {
-			String dep = departamento == null ? "¿?" : departamento.getNombre();
-			return String.format("Empleado     [%-2d %-25s %s]", id, nombre, salario, nacimiento, dep);
+			return String.format("Empleado [ID: %d, Nombre: %s, Salario: %s, Fecha de nacimiento: %s, Departamento: %s]", id, nombre, salario, nacimiento, ((departamento != null) ? departamento.getNombre() : "No está asignado a ningún departamento"));
 		}
 	
 		@Override

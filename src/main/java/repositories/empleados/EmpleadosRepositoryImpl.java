@@ -6,6 +6,7 @@ import java.util.Optional;
 import dao.HibernateManager;
 import exceptions.DepartamentoException;
 import exceptions.EmpleadoException;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import models.Empleado;
 
@@ -15,7 +16,8 @@ public class EmpleadosRepositoryImpl implements EmpleadosRepository{
 	public List<Empleado> findAll() {
 		HibernateManager hb = HibernateManager.getInstance();
 		hb.open();
-		TypedQuery<Empleado> query = hb.getEm().createNamedQuery("Departamento.findAll", Empleado.class);
+		EntityManager em = hb.getEm();
+		TypedQuery<Empleado> query = em.createNamedQuery("Empleado.findAll", Empleado.class);
 		List<Empleado> list = query.getResultList();
 		hb.close();
 		return list;
@@ -69,7 +71,6 @@ public class EmpleadosRepositoryImpl implements EmpleadosRepository{
                 hb.getTransaction().rollback();
             }
         }
-//        REVISAR, IGUAL ESTÁ MAL
 	}
 
 }

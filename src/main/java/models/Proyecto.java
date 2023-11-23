@@ -29,7 +29,7 @@ public class Proyecto {
 
 	@Override
 	public String toString() {
-		List<String> emps = empleados.stream().map(e -> e.getNombre()).sorted().toList();
-		return String.format("Proyecto [%-2d %-25s %s]", id, nombre, emps);
+//		List<String> emps = empleados.stream().map(e -> e.getNombre()).sorted().toList();
+		return String.format("Proyecto [ID: %d, Nombre: %s]", id, nombre);
 	}
 }

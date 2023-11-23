@@ -25,65 +25,102 @@ public class Menu {
 		EmfSingleton emfS = EmfSingleton.getInstance();
 		EntityManagerFactory emf = emfS.getEmf();
 		EntityManager em = emf.createEntityManager();
-
-		List<String> opciones = List.of("1. Ver departamentos", "2. Añadir departamentos", "3. Eliminar departamentos",
-				"4. Ver empleados", "5. Añadir empleados", "6. Eliminar empleados", "7. Ver proyectos",
-				"8. Añadir proyecto", "9. Eliminar proyecto", "0. Salir");
-		while (true) {
+		List<String> opciones;
+		while(true) {
+			opciones = List.of("BBDD Empresa ~ Hibernate:\n1. DEPARTAMENTOS", "2. EMPLEADOS", "3. PROYECTOS", "4. CERRAR");
 			System.out.println(opciones);
-			switch (IO.readString().charAt(0)) {
+			int seleccionado = IO.readString().charAt(0);
+			boolean inDep = true;
+			switch (seleccionado) {
 			case '1':
-				verDepartamentos(controller);
+				while (inDep) {
+					opciones = List.of("DEPARTAMENTOS:\n1. VER", "2. AÑADIR", "3. ELIMINAR", "4. VOLVER");
+					System.out.println(opciones);
+					switch (IO.readString().charAt(0)) {
+					case '1':
+						verDepartamentos(controller);
+						break;
+					case '2':
+						String tryAdd = (addDepartamento(controller) ? "Se pudo añadir departamento" : "No se pudo añadir el nuevo departamento");
+						System.out.println(tryAdd);
+						break;
+					case '3':
+						break;
+					case '4':
+						inDep = false;
+						seleccionado = 0;
+						break;
+					}
+				}
 				break;
 			case '2':
-				System.out.println("add departamentos");
+				while (inDep) {
+					opciones = List.of("EMPLEADOS:\n1. VER", "2. AÑADIR", "3. ELIMINAR", "4. VOLVER");
+					System.out.println(opciones);
+					switch (IO.readString().charAt(0)) {
+					case '1':
+						verEmpleados(controller);
+						break;
+					case '2':
+						System.out.println("METODO addEmpleado()");
+						break;
+					case '3':
+						System.out.println("METODO deleteEmpleado()");
+						break;
+					case '4':
+						inDep = false;
+						seleccionado = 0;
+						break;
+					}
+				}
 				break;
 			case '3':
-				System.out.println("deleteDepartamentos");
+				while (inDep) {
+					opciones = List.of("PROYECTOS:\n1. VER", "2. AÑADIR", "3. ELIMINAR", "4. VOLVER");
+					System.out.println(opciones);
+					switch (IO.readString().charAt(0)) {
+					case '1':
+						verProyectos(controller);
+						break;
+					case '2':
+						System.out.println("METODO addProyecto()");
+						break;
+					case '3':
+						System.out.println("METODO deleteProyecto()");
+						break;
+					case '4':
+						inDep = false;
+						seleccionado = 0;
+						break;
+					}
+				}
 				break;
 			case '4':
-				System.out.println("ver empleados");
-				break;
-			case '5':
-				System.out.println("add empleados");
-				break;
-			case '6':
-				System.out.println("deleteEmpleados");
-				break;
-			case '7':
-				System.out.println("ver proyectos");
-				break;
-			case '8':
-				System.out.println("addProyecto");
-				break;
-			case '9':
-				System.out.println("deleteProyecto");
-				break;
-			case '0':
-//				cerrarEmp(e);
-//				cerrarDep(d);
 				IO.println("CERRANDO BBDD");
 				return;
-			default:
-				break;
 			}
 		}
 	}
 
 	public static void verDepartamentos(Controller controller) {
-		/* AQUI */
 		List<Departamento> departamentos = controller.getDepartamentos();
 		for (Departamento departamento : departamentos) {
 			System.out.println(departamento);
 		}
 	}
 
-	public static void verEmpleados(Empleado e) {
-		System.out.println(e.toString());
+	public static void verEmpleados(Controller controller) {
+		List<Empleado> empleados = controller.getEmpleados();
+		for (Empleado empleado : empleados) {
+			System.out.println(empleado);
+		}
 	}
 
-	public static void verProyectos(Proyecto p) {
-		System.out.println(p.toString());
+	public static void verProyectos(Controller controller) {
+		List<Proyecto> proyectos = controller.getProyectos();
+		for (Proyecto proyecto : proyectos) {
+			System.out.println(proyecto);
+		}
 	}
 
 	/**
@@ -91,7 +128,25 @@ public class Menu {
 	 * 
 	 * @param d
 	 */
-	public static void addDepartamento(Departamento d) {
+	public static Boolean addDepartamento(Controller controller) {
+		IO.print("Nombre del nuevo departamento: ");
+		String nombre = IO.readString();
+		IO.print("Tiene jefe el nuevo departamento (Y/N): ");
+		char jefe = IO.readString().toUpperCase().charAt(0);
+		switch (jefe) {
+		case 'Y':
+			//HAY JEFE
+			return false;
+		case 'N':
+			Departamento d = new Departamento(nombre);
+			controller.createDepartamento(d);
+			controller.getDepartamentos().add(d);
+			return true;
+		default:
+			IO.println("Por favor, introduzca los datos correctamente");
+			break;
+		}		
+		return false;
 	}
 
 	/**

@@ -25,6 +25,10 @@ public class Departamento {
 	@OneToMany(mappedBy = "departamento", fetch = FetchType.EAGER)
 	private Set<Empleado> empleados = new HashSet<>();
 
+	public Departamento(String nombre) {
+		this.nombre = nombre;
+	}
+
 	public void addEmpleado(Empleado e) {
 		this.getEmpleados().add(e);
 		e.setDepartamento(this);
@@ -37,6 +41,7 @@ public class Departamento {
 	@Override
 	public String toString() {
 //		List<String> emps = empleados.stream().map(e -> e.getNombre()).sorted().toList();
-		return String.format("Departamento [Id:%d, Nombre: %s, Jefe: %s]", id, nombre, (jefe != null) ? jefe.getNombre() : null);
+		return String.format("Departamento [ID:%d, Nombre: %s, Jefe: %s]", id, nombre, (jefe != null) ? jefe.getNombre() : "No hay jefe asignado");
 	}
+
 }

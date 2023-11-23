@@ -36,11 +36,10 @@ public class DepartamentosRepositoryImpl implements DepartamentosRepository {
         hb.open();
         hb.getTransaction().begin();
         try {
-            hb.getEm().merge(dep);
+        	hb.getEm().persist(dep);
             hb.getTransaction().commit();
             hb.close();
             return dep;
-
         } catch (Exception e) {
             throw new DepartamentoException("Error al guardar departamento con id: " + dep.getId() + "\n" + e.getMessage());
         } finally {
