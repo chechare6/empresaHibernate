@@ -18,11 +18,11 @@ public class Departamento {
 
 	private String nombre;
 
-	@ManyToOne
+	@OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "jefe")
     private Empleado jefe;
 
-	@OneToMany(mappedBy = "departamento")
+	@OneToMany(mappedBy = "departamento", fetch = FetchType.EAGER)
 	private Set<Empleado> empleados = new HashSet<>();
 
 	public void addEmpleado(Empleado e) {
@@ -31,12 +31,12 @@ public class Departamento {
 	}
 	
 	public void addJefe(Empleado e) {
-		e.setJefe(e);
+		this.setJefe(e);
 	}
 	
 	@Override
 	public String toString() {
-		List<String> emps = empleados.stream().map(e -> e.getNombre()).sorted().toList();
-		return String.format("Departamento [%-2d %-25s %s]", id, nombre, jefe, emps);
+//		List<String> emps = empleados.stream().map(e -> e.getNombre()).sorted().toList();
+		return String.format("Departamento [Id:%d, Nombre: %s, Jefe: %s]", id, nombre, (jefe != null) ? jefe.getNombre() : null);
 	}
 }

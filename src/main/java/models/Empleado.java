@@ -28,13 +28,9 @@
 		@Temporal(TemporalType.DATE)
 		private Date nacimiento;
 	
-		@ManyToOne
-	    @JoinColumn(name = "departamento") // Cambia esto a la columna correcta
+		@ManyToOne(fetch = FetchType.LAZY)
+	    @JoinColumn(name = "departamento")
 	    private Departamento departamento;
-
-	    @ManyToOne
-	    @JoinColumn(name = "jefe") // Cambia esto a la columna correcta
-	    private Empleado jefe;
 	
 		@ManyToMany
 		@JoinTable(name = "empleado_proyecto", joinColumns = @JoinColumn(name = "empleado_id"), inverseJoinColumns = @JoinColumn(name = "proyecto_id"))

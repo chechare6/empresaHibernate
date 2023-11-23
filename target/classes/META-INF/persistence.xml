@@ -18,7 +18,7 @@
 			<property name="jakarta.persistence.jdbc.password" value="toor" />
 
 			<!-- inicialización de datos de la base de datos -->
-			<property name="jakarta.persistence.schema-generation.database.action" value="drop-and-create" />
+			<property name="jakarta.persistence.schema-generation.database.action" value="create" />
 			<property name="jakarta.persistence.schema-generation.create-source" value="script" />
 			<property name="jakarta.persistence.schema-generation.drop-source" value="script" />
 			<property name="jakarta.persistence.schema-generation.drop-script-source" value="META-INF/sql/drop.sql" />

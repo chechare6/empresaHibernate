@@ -5,6 +5,7 @@ import java.util.Optional;
 
 import dao.HibernateManager;
 import exceptions.*;
+import jakarta.persistence.EntityManager;
 import jakarta.persistence.TypedQuery;
 import models.Departamento;
 
@@ -13,13 +14,13 @@ public class DepartamentosRepositoryImpl implements DepartamentosRepository {
 	@Override
 	public List<Departamento> findAll() {
 		HibernateManager hb = HibernateManager.getInstance();
-		hb.open();
-		TypedQuery<Departamento> query = hb.getEm().createNamedQuery("Departamento.findAll", Departamento.class);
-		List<Departamento> list = query.getResultList();
-		hb.close();
-		return list;
+	    hb.open();
+	    EntityManager em = hb.getEm();
+	    TypedQuery<Departamento> query = em.createNamedQuery("Departamento.findAll", Departamento.class);
+	    List<Departamento> list = query.getResultList();
+	    hb.close();
+	    return list;
 	}
-
 	@Override
 	public Optional<Departamento> findById(Integer id) {
 		HibernateManager hb = HibernateManager.getInstance();
