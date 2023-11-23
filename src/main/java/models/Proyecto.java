@@ -22,6 +22,14 @@ public class Proyecto {
 	@JoinTable(name = "proyecto_empleado", joinColumns = @JoinColumn(name = "proyectoId"), inverseJoinColumns = @JoinColumn(name = "empleadoId"))
 	private Set<Empleado> empleados = new HashSet<>();
 
+	public Proyecto(Integer id) {
+		this.id = id;
+	}
+
+	public Proyecto(String nombre) {
+		this.nombre = nombre;
+	}
+
 	public void addEmpleado(Empleado e) {
 		e.getProyecto().add(this);
 		this.getEmpleados().add(e);
@@ -32,4 +40,6 @@ public class Proyecto {
 //		List<String> emps = empleados.stream().map(e -> e.getNombre()).sorted().toList();
 		return String.format("Proyecto [ID: %d, Nombre: %s]", id, nombre);
 	}
+
+
 }

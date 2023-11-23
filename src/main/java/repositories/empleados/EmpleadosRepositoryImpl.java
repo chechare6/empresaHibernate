@@ -3,6 +3,7 @@ package repositories.empleados;
 import java.util.List;
 import java.util.Optional;
 
+import IO.IO;
 import dao.HibernateManager;
 import exceptions.DepartamentoException;
 import exceptions.EmpleadoException;
@@ -37,13 +38,11 @@ public class EmpleadosRepositoryImpl implements EmpleadosRepository{
 		HibernateManager hb = HibernateManager.getInstance();
         hb.open();
         hb.getTransaction().begin();
-
         try {
-            hb.getEm().merge(emp);
+            hb.getEm().persist(emp);
             hb.getTransaction().commit();
             hb.close();
             return emp;
-
         } catch (Exception e) {
             throw new DepartamentoException("Error al guardar departamento con id: " + emp.getId() + "\n" + e.getMessage());
         } finally {
@@ -54,18 +53,23 @@ public class EmpleadosRepositoryImpl implements EmpleadosRepository{
 	}
 
 	@Override
-	public Boolean delete(Empleado emp) {
+	public Boolean delete(Empleado e) {
 		HibernateManager hb = HibernateManager.getInstance();
         hb.open();
+        hb.getTransaction().begin();
         try {
-            hb.getTransaction().begin();
-            emp = hb.getEm().find(Empleado.class, emp.getId());
-            hb.getEm().remove(emp);
-            hb.getTransaction().commit();
-            hb.close();
-            return true;
-        } catch (Exception e) {
-            throw new EmpleadoException("Error al eliminar empleado con id: " + emp.getId() + " - " + e.getMessage());
+        	Empleado eDelete = hb.getEm().find(Empleado.class, e.getId());
+        	if(eDelete != null) {
+        		hb.getEm().remove(e);
+        		hb.getTransaction().commit();
+        		hb.close();
+        		return true;
+        	} else {
+        		IO.println("No existe empleado con ID: " + e.getId());
+        		return false;
+        	}
+        } catch (Exception ex) {
+            throw new EmpleadoException("Error al eliminar empleado con id: " + e.getId() + " - " + ex.getMessage());
         } finally {
             if (hb.getTransaction().isActive()) {
                 hb.getTransaction().rollback();

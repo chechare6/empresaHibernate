@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Table(name = "hib_departamento")
 @NamedQuery(name="Departamento.findAll", query = "SELECT d FROM Departamento d")
+@NamedQuery(name="Departamento.findByJefe", query = "SELECT d FROM Departamento d WHERE d.jefe = :jefe")
 public class Departamento {
 
 	@Id
@@ -24,6 +25,10 @@ public class Departamento {
 
 	@OneToMany(mappedBy = "departamento", fetch = FetchType.EAGER)
 	private Set<Empleado> empleados = new HashSet<>();
+
+	public Departamento(Integer id) {
+		this.id = id;
+	}
 
 	public Departamento(String nombre) {
 		this.nombre = nombre;
@@ -43,5 +48,6 @@ public class Departamento {
 //		List<String> emps = empleados.stream().map(e -> e.getNombre()).sorted().toList();
 		return String.format("Departamento [ID:%d, Nombre: %s, Jefe: %s]", id, nombre, (jefe != null) ? jefe.getNombre() : "No hay jefe asignado");
 	}
+
 
 }

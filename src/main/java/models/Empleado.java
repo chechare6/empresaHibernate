@@ -37,6 +37,16 @@
 		@JoinTable(name = "empleado_proyecto", joinColumns = @JoinColumn(name = "empleado_id"), inverseJoinColumns = @JoinColumn(name = "proyecto_id"))
 		private Set<Proyecto> proyecto = new HashSet<>();
 	
+		public Empleado(Integer id) {
+			this.id = id;
+		}
+
+		public Empleado(String nombre, Double salario, Date nacimiento) {
+			this.nombre = nombre;
+			this.salario = salario;
+			this.nacimiento = nacimiento;
+		}
+
 		public void addDepartamento(Departamento d) {
 			this.setDepartamento(d);
 			d.getEmpleados().add(this);
@@ -60,4 +70,6 @@
 		public boolean equals(Empleado e) {
 			return e != null && e.getId() != null && e.getId() == id;
 		}
+
+
 	}

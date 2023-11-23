@@ -2,6 +2,8 @@ package repositories.proyecto;
 
 import java.util.List;
 import java.util.Optional;
+
+import IO.IO;
 import dao.HibernateManager;
 import exceptions.ProyectoException;
 import jakarta.persistence.TypedQuery;
@@ -47,17 +49,23 @@ public class ProyectoRepositoryImpl implements ProyectoRepository{
 	}
 
 	@Override
-	public Boolean delete(Proyecto proy) {
+	public Boolean delete(Proyecto p) {
 		HibernateManager hb = HibernateManager.getInstance();
 		hb.open();
 		hb.getTransaction().begin();
 		try {
-			proy = hb.getEm().find(Proyecto.class, proy.getId());
-			hb.getEm().remove(proy);
-			hb.close();
-			return true;
+			Proyecto pDelete = hb.getEm().find(Proyecto.class, p.getId());
+			if(pDelete != null) {
+				hb.getEm().remove(pDelete);
+				hb.getTransaction().commit();
+				hb.close();
+				return true;
+			} else {
+				IO.println("No existe nigún proyecto con la ID: " + p.getId());
+				return false;
+			}
 		} catch (Exception e) {
-			throw new ProyectoException("Error al eliminar el proyecto con id" + proy.getId() + "\n" + e.getMessage());
+			throw new ProyectoException("Error al eliminar el proyecto con id" + p.getId() + "\n" + e.getMessage());
 		} finally {
 			if(hb.getTransaction().isActive()) {
 				hb.getTransaction().rollback();
