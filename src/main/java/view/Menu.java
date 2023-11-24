@@ -8,7 +8,9 @@ import dao.HibernateManager;
 import models.Departamento;
 import models.Empleado;
 import models.Proyecto;
+import repositories.departamentos.DepartamentosRepository;
 import repositories.departamentos.DepartamentosRepositoryImpl;
+import repositories.empleados.EmpleadosRepository;
 import repositories.empleados.EmpleadosRepositoryImpl;
 import repositories.proyecto.ProyectoRepositoryImpl;
 
@@ -150,8 +152,23 @@ public class Menu {
 		char jefe = IO.readString().toUpperCase().charAt(0);
 		switch (jefe) {
 		case 'Y':
-			//HAY JEFE
-			return false;
+			IO.print("¿Qué empleado es el jefe? ID: ");
+			Integer idJefe = IO.readInt();
+			EmpleadosRepository eR = new EmpleadosRepositoryImpl();
+			Empleado e = eR.findById(idJefe).orElse(null);
+			if(e != null) {
+				if(e.getDepartamento() != null) {
+					e.setDepartamento(null);
+					IO.println("Se ha cambiado el puesto de jefe del empleado " + e.getNombre() + " a este nuevo departamento");
+				}
+				Departamento d = new Departamento(nombre, e);
+				controller.getDepartamentos().add(d);
+				controller.createDepartamento(d);
+				return true;
+			} else {
+				IO.println("No se encontró ningún empleado con ID: " + idJefe);
+				return false;
+			}
 		case 'N':
 			Departamento d = new Departamento(nombre);
 			controller.getDepartamentos().add(d);
@@ -182,10 +199,17 @@ public class Menu {
 		case 'Y':
 			IO.print("¿En qué departamento trabaja el empleado? ID: ");
 			Integer idDep = IO.readInt();
-			Empleado eJefe = new Empleado(nombre, salario, nacimiento, idDep);
-			controller.getEmpleados().add(eJefe);
-			controller.createEmpleado(eJefe);
-			return true;
+			DepartamentosRepository dR = new DepartamentosRepositoryImpl();
+			Departamento d = dR.findById(idDep).orElse(null);
+			if(d != null) {
+				Empleado eJefe = new Empleado(nombre, salario, nacimiento, d);
+				controller.getEmpleados().add(eJefe);
+				controller.createEmpleado(eJefe);
+				return true;				
+			} else {
+				IO.println("No se encontró ningún departamento con la ID: " + idDep);
+				return false;
+			}			
 		case 'N':
 			Empleado e = new Empleado(nombre, salario, nacimiento);
 			controller.getEmpleados().add(e);

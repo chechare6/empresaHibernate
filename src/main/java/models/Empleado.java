@@ -3,10 +3,14 @@
 	import java.util.Date;
 	import java.util.HashSet;
 	import java.util.Set;
-	import jakarta.persistence.*;
+
+import IO.IO;
+import jakarta.persistence.*;
 	import lombok.AllArgsConstructor;
 	import lombok.Data;
 	import lombok.NoArgsConstructor;
+	import repositories.departamentos.DepartamentosRepository;
+	import repositories.departamentos.DepartamentosRepositoryImpl;
 	
 	@Data
 	@AllArgsConstructor
@@ -47,6 +51,13 @@
 			this.nacimiento = nacimiento;
 		}
 
+		public Empleado(String nombre, Double salario, Date nacimiento, Departamento departamento) {
+			this.nombre = nombre;
+			this.salario = salario;
+			this.nacimiento = nacimiento;
+			this.departamento = departamento;
+		}
+
 		public void addDepartamento(Departamento d) {
 			this.setDepartamento(d);
 			d.getEmpleados().add(this);
@@ -71,12 +82,7 @@
 			return e != null && e.getId() != null && e.getId() == id;
 		}
 
-		public Empleado(String nombre, Double salario, Date nacimiento, Integer idDep) {
-			this.nombre = nombre;
-			this.salario = salario;
-			this.nacimiento = nacimiento;
-//			this.departamento = idDep;
-		}
+
 
 
 	}

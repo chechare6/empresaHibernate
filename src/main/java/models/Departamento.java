@@ -34,6 +34,11 @@ public class Departamento {
 		this.nombre = nombre;
 	}
 
+	public Departamento(String nombre, Empleado jefe) {
+		this.nombre = nombre;
+		this.jefe = jefe;
+	}
+	
 	public void addEmpleado(Empleado e) {
 		this.getEmpleados().add(e);
 		e.setDepartamento(this);
@@ -48,6 +53,7 @@ public class Departamento {
 //		List<String> emps = empleados.stream().map(e -> e.getNombre()).sorted().toList();
 		return String.format("Departamento [ID:%d, Nombre: %s, Jefe: %s]", id, nombre, (jefe != null) ? jefe.getNombre() : "No hay jefe asignado");
 	}
+
 
 
 }
