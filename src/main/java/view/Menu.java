@@ -180,8 +180,12 @@ public class Menu {
 		char departamento = IO.readString().toUpperCase().charAt(0);
 		switch (departamento) {
 		case 'Y':
-			//HAY DEPARTAMENTO
-			break;
+			IO.print("¿En qué departamento trabaja el empleado? ID: ");
+			Integer idDep = IO.readInt();
+			Empleado eJefe = new Empleado(nombre, salario, nacimiento, idDep);
+			controller.getEmpleados().add(eJefe);
+			controller.createEmpleado(eJefe);
+			return true;
 		case 'N':
 			Empleado e = new Empleado(nombre, salario, nacimiento);
 			controller.getEmpleados().add(e);

@@ -37,14 +37,12 @@ public class DepartamentosRepositoryImpl implements DepartamentosRepository {
 	public Optional<Departamento> findByJefe(Empleado jefe){
 		HibernateManager hb = HibernateManager.getInstance();
 		hb.open();
-		EntityManager em = hb.getEm();
-		TypedQuery<Departamento> query = em.createNamedQuery("Departamento.findByJefe", Departamento.class);
+		TypedQuery<Departamento> query = hb.getEm().createNamedQuery("Departamento.findByJefe", Departamento.class);
         query.setParameter("jefe", jefe);
         try {
             Departamento departamento = query.getSingleResult();
             return Optional.of(departamento); 
-        } catch (EmpleadoException e) {
-        	e.printStackTrace();
+        } catch (Exception e) {
             return Optional.empty();
         }
 	}
@@ -73,24 +71,24 @@ public class DepartamentosRepositoryImpl implements DepartamentosRepository {
 	public Boolean delete(Departamento d) {
 		HibernateManager hb = HibernateManager.getInstance();
         hb.open();
-        hb.getTransaction().begin();
         try {
+        	hb.getTransaction().begin();
             Departamento dDelete = hb.getEm().find(Departamento.class, d.getId());
             if(dDelete != null) {
             	hb.getEm().remove(dDelete);
             	hb.getTransaction().commit();
-            	hb.close();            	
             	return true;
             } else {
             	IO.println("No existe ningún departamento con ID: " + d.getId());
             	return false;
 			}
         } catch (Exception e) {
+        	if (hb.getTransaction().isActive()) {
+        		hb.getTransaction().rollback();
+        	}
             throw new EmpleadoException("Error al eliminar empleado con id: " + d.getId() + " - " + e.getMessage());
         } finally {
-            if (hb.getTransaction().isActive()) {
-                hb.getTransaction().rollback();
-            }
+        	hb.close();            	
         }
 	}
 

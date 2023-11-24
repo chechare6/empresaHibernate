@@ -47,12 +47,12 @@ public class Controller {
 					departamento.setJefe(null);
 				}
 //				logger.info("Borrando empleado con id: " + e.getId());
+				return empleadosRepository.delete(e);
 			}
-			return empleadosRepository.delete(e);
 		} catch (Exception ex) {
 			ex.printStackTrace();
-			return false;			
 		}
+		return false;			
 	}
 	
 	//DEPARTAMENTOS

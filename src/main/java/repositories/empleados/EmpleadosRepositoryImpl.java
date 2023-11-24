@@ -60,7 +60,7 @@ public class EmpleadosRepositoryImpl implements EmpleadosRepository{
         try {
         	Empleado eDelete = hb.getEm().find(Empleado.class, e.getId());
         	if(eDelete != null) {
-        		hb.getEm().remove(e);
+        		hb.getEm().remove(eDelete);
         		hb.getTransaction().commit();
         		hb.close();
         		return true;

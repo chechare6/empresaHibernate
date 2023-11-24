@@ -71,5 +71,12 @@
 			return e != null && e.getId() != null && e.getId() == id;
 		}
 
+		public Empleado(String nombre, Double salario, Date nacimiento, Integer idDep) {
+			this.nombre = nombre;
+			this.salario = salario;
+			this.nacimiento = nacimiento;
+//			this.departamento = idDep;
+		}
+
 
 	}
