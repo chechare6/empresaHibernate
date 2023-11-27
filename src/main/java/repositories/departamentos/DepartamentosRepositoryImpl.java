@@ -2,8 +2,6 @@ package repositories.departamentos;
 
 import java.util.List;
 import java.util.Optional;
-
-import IO.IO;
 import dao.HibernateManager;
 import exceptions.*;
 import jakarta.persistence.EntityManager;
@@ -12,20 +10,20 @@ import models.Departamento;
 import models.Empleado;
 
 public class DepartamentosRepositoryImpl implements DepartamentosRepository {
+	HibernateManager hb = HibernateManager.getInstance();
 
 	@Override
 	public List<Departamento> findAll() {
-		HibernateManager hb = HibernateManager.getInstance();
-	    hb.open();
-	    EntityManager em = hb.getEm();
-	    TypedQuery<Departamento> query = em.createNamedQuery("Departamento.findAll", Departamento.class);
-	    List<Departamento> list = query.getResultList();
-	    hb.close();
-	    return list;
+		hb.open();
+		EntityManager em = hb.getEm();
+		TypedQuery<Departamento> query = em.createNamedQuery("Departamento.findAll", Departamento.class);
+		List<Departamento> list = query.getResultList();
+		hb.close();
+		return list;
 	}
+
 	@Override
 	public Optional<Departamento> findById(Integer id) {
-		HibernateManager hb = HibernateManager.getInstance();
 		hb.open();
 		EntityManager em = hb.getEm();
 		Optional<Departamento> dep = Optional.ofNullable(em.find(Departamento.class, id));
@@ -34,62 +32,79 @@ public class DepartamentosRepositoryImpl implements DepartamentosRepository {
 	}
 
 	@Override
-	public Optional<Departamento> findByJefe(Empleado jefe){
-		HibernateManager hb = HibernateManager.getInstance();
+	public Optional<Departamento> findByJefe(Empleado jefe) {
 		hb.open();
 		TypedQuery<Departamento> query = hb.getEm().createNamedQuery("Departamento.findByJefe", Departamento.class);
-        query.setParameter("jefe", jefe);
-        try {
-            Departamento departamento = query.getSingleResult();
-            return Optional.of(departamento); 
-        } catch (Exception e) {
-            return Optional.empty();
-        }
+		query.setParameter("jefe", jefe);
+		try {
+			Departamento departamento = query.getSingleResult();
+			return Optional.of(departamento);
+		} catch (Exception e) {
+			return Optional.empty();
+		}
 	}
-	
+
 	@Override
-	public Departamento save(Departamento dep) {
-	    HibernateManager hb = HibernateManager.getInstance();
+	public Boolean save(Departamento d) {
 	    hb.open();
 	    hb.getTransaction().begin();
 	    try {
-	        hb.getEm().persist(dep);
-	        hb.getTransaction().commit();
-	        hb.close();
-	        return dep;
+	    	Empleado jefe = null;
+	    	if(d.getJefe() != null)
+	    		jefe = hb.getEm().find(Empleado.class, d.getJefe().getId());
+	    	d.setJefe(jefe);
+	    	Departamento updateD = hb.getEm().merge(d);
+	    	if(updateD.getJefe() != null) {
+	    		Empleado updateJefe = updateD.getJefe();
+	    		if(updateJefe.getDepartamento() != null && !updateJefe.getDepartamento().equals(updateD)) {
+	    			updateJefe.getDepartamento().setJefe(null);
+	    			hb.getEm().merge(updateJefe.getDepartamento());
+	    		}
+	    		updateJefe.setDepartamento(updateD);
+	    		hb.getEm().merge(updateJefe);
+	    	}
+	    	hb.getTransaction().commit();
+	    	return true;
 	    } catch (Exception e) {
-	        throw new DepartamentoException("Error al guardar departamento con id: " + dep.getId() + "\n" + e.getMessage());
+	        throw new DepartamentoException("Error al guardar departamento con id: " + d.getId() + "\n" + e.getMessage());
 	    } finally {
 	        if (hb.getTransaction().isActive()) {
 	            hb.getTransaction().rollback();
 	        }
+	        hb.close();
 	    }
 	}
 
 
 	@Override
 	public Boolean delete(Departamento d) {
-		HibernateManager hb = HibernateManager.getInstance();
-        hb.open();
-        try {
-        	hb.getTransaction().begin();
-            Departamento dDelete = hb.getEm().find(Departamento.class, d.getId());
-            if(dDelete != null) {
-            	hb.getEm().remove(dDelete);
-            	hb.getTransaction().commit();
-            	return true;
-            } else {
-            	IO.println("No existe ningún departamento con ID: " + d.getId());
-            	return false;
+		hb.open();
+		try {
+			hb.getTransaction().begin();
+			d = hb.getEm().find(Departamento.class, d.getId());
+			if (d != null) {
+				for (Empleado e : d.getEmpleados()) {
+					e.setDepartamento(null);
+					hb.getEm().merge(e);
+				}
+				hb.getTransaction().commit();
+				hb.getEm().clear();
+				hb.getTransaction().begin();
+				d = hb.getEm().find(Departamento.class, d.getId());
+				hb.getEm().remove(d);
+				hb.getTransaction().commit();
+				return true;
+			} else {
+				return false;
 			}
-        } catch (Exception e) {
-        	if (hb.getTransaction().isActive()) {
-        		hb.getTransaction().rollback();
-        	}
-            throw new EmpleadoException("Error al eliminar empleado con id: " + d.getId() + " - " + e.getMessage());
-        } finally {
-        	hb.close();            	
-        }
+		} catch (Exception e) {
+			throw new EmpleadoException("Error al eliminar empleado con id: " + d.getId() + " - " + e.getMessage());
+		} finally {
+			if (hb.getTransaction().isActive()) {
+				hb.getTransaction().rollback();
+			}
+			hb.close();
+		}
 	}
 
 }

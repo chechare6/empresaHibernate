@@ -19,7 +19,7 @@ public class Departamento {
 
 	private String nombre;
 
-	@OneToOne(fetch = FetchType.LAZY)
+	@OneToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinColumn(name = "jefe")
     private Empleado jefe;
 
@@ -47,13 +47,9 @@ public class Departamento {
 	public void addJefe(Empleado e) {
 		this.setJefe(e);
 	}
-	
+
 	@Override
 	public String toString() {
-//		List<String> emps = empleados.stream().map(e -> e.getNombre()).sorted().toList();
 		return String.format("Departamento [ID:%d, Nombre: %s, Jefe: %s]", id, nombre, (jefe != null) ? jefe.getNombre() : "No hay jefe asignado");
 	}
-
-
-
 }

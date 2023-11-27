@@ -3,14 +3,10 @@
 	import java.util.Date;
 	import java.util.HashSet;
 	import java.util.Set;
-
-import IO.IO;
-import jakarta.persistence.*;
+	import jakarta.persistence.*;
 	import lombok.AllArgsConstructor;
 	import lombok.Data;
 	import lombok.NoArgsConstructor;
-	import repositories.departamentos.DepartamentosRepository;
-	import repositories.departamentos.DepartamentosRepositoryImpl;
 	
 	@Data
 	@AllArgsConstructor
@@ -81,8 +77,4 @@ import jakarta.persistence.*;
 		public boolean equals(Empleado e) {
 			return e != null && e.getId() != null && e.getId() == id;
 		}
-
-
-
-
 	}

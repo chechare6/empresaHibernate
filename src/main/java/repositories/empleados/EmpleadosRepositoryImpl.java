@@ -12,10 +12,11 @@ import jakarta.persistence.TypedQuery;
 import models.Empleado;
 
 public class EmpleadosRepositoryImpl implements EmpleadosRepository{
-
+	
+	HibernateManager hb = HibernateManager.getInstance();
+	
 	@Override
 	public List<Empleado> findAll() {
-		HibernateManager hb = HibernateManager.getInstance();
 		hb.open();
 		EntityManager em = hb.getEm();
 		TypedQuery<Empleado> query = em.createNamedQuery("Empleado.findAll", Empleado.class);
@@ -26,7 +27,6 @@ public class EmpleadosRepositoryImpl implements EmpleadosRepository{
 
 	@Override
 	public Optional<Empleado> findById(Integer id) {
-		HibernateManager hb = HibernateManager.getInstance();
 		hb.open();
 		Optional<Empleado> emp = Optional.ofNullable(hb.getEm().find(Empleado.class, id));
 		hb.close();
@@ -34,27 +34,25 @@ public class EmpleadosRepositoryImpl implements EmpleadosRepository{
 	}
 
 	@Override
-	public Empleado save(Empleado emp) {
-		HibernateManager hb = HibernateManager.getInstance();
+	public Boolean save(Empleado emp) {
         hb.open();
         hb.getTransaction().begin();
         try {
             hb.getEm().persist(emp);
             hb.getTransaction().commit();
-            hb.close();
-            return emp;
+            return true;
         } catch (Exception e) {
             throw new DepartamentoException("Error al guardar departamento con id: " + emp.getId() + "\n" + e.getMessage());
         } finally {
             if (hb.getTransaction().isActive()) {
                 hb.getTransaction().rollback();
             }
+            hb.close();
         }
 	}
 
 	@Override
 	public Boolean delete(Empleado e) {
-		HibernateManager hb = HibernateManager.getInstance();
         hb.open();
         hb.getTransaction().begin();
         try {

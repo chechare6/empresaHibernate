@@ -30,21 +30,21 @@ public class ProyectoRepositoryImpl implements ProyectoRepository{
 	}
 
 	@Override
-	public Proyecto save(Proyecto proy) {
+	public Boolean save(Proyecto proy) {
 		HibernateManager hb = HibernateManager.getInstance();
 		hb.open();
 		hb.getTransaction().begin();
 		try {
 			hb.getEm().merge(proy);
 			hb.getTransaction().commit();
-			hb.close();
-			return proy;
+			return true;
 		} catch (Exception e) {
 			throw new ProyectoException("Error al guardar el proyecto con id" + proy.getId() + "\n" + e.getMessage());
 		} finally {
 			if(hb.getTransaction().isActive()) {
 				hb.getTransaction().rollback();
 			}
+			hb.close();
 		}
 	}
 

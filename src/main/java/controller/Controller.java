@@ -26,7 +26,7 @@ public class Controller {
 		return empleadosRepository.findAll();
 	}
 	
-	public Empleado createEmpleado(Empleado e) {
+	public Boolean createEmpleado(Empleado e) {
 //		logger.info("Guardando empleado");
 		return empleadosRepository.save(e);
 	}
@@ -61,7 +61,7 @@ public class Controller {
 		return departamentosRepository.findAll();
 	}
 	
-	public Departamento createDepartamento(Departamento d) {
+	public Boolean createDepartamento(Departamento d) {
 //		logger.info("Guardando departamento");
 		return departamentosRepository.save(d);
 	}
@@ -82,7 +82,7 @@ public class Controller {
 		return proyectoRepository.findAll();
 	}
 	
-	public Proyecto createProyecto(Proyecto p) {
+	public Boolean createProyecto(Proyecto p) {
 //		logger.info("Guardando proyecto");
 		return proyectoRepository.save(p);
 	}
