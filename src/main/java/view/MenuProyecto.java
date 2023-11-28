@@ -57,6 +57,10 @@ public class MenuProyecto {
 		}
 	}
 	
+	/**
+	 * Método para buscar proyectos según ID
+	 * @param controller
+	 */
 	private static void searchProyecto(Controller controller) {
 		IO.print("ID del proyeto a buscar: ");
 		Integer id = IO.readInt();
@@ -67,6 +71,10 @@ public class MenuProyecto {
 			IO.print("No se ha encontrado un proyeto con ID: " + id);
 	}
 	
+	/**
+	 * Método para modificar proyectos
+	 * @param controller
+	 */
 	private static void updateProyecto(Controller controller) {
 		IO.print("ID del proyecto a modificar: ");
 		Integer id = IO.readInt();
@@ -110,6 +118,10 @@ public class MenuProyecto {
 		return controller.deleteProyecto(p);
 	}
 
+	/**
+	 *	Método que añade un empleado al proyecto indicado
+	 * @param controller
+	 */
 	private static void addEmpleado(Controller controller) {
 		IO.print("ID del proyecto que tendrá un nuevo empleado: ");
 		Integer id = IO.readInt();
@@ -125,8 +137,23 @@ public class MenuProyecto {
 		}
 	}
 	
+	/**
+	 * Método que elimina un empleado del proyecto indicado
+	 * @param controller
+	 */
 	private static void deleteEmpleado(Controller controller) {
-		// TODO Auto-generated method stub
+		IO.print("ID del proyecto que tendrá un nuevo empleado: ");
+		Integer id = IO.readInt();
+		IO.print("ID del empleado que será añadido: ");
+		Integer eId = IO.readInt();
+		if(id != null && eId != null) {
+			if(controller.delEmplFromProy(new Empleado(eId), new Proyecto(id)))
+				IO.println("Empleado añadido con éxito al proyecto");
+			else
+				IO.println("No se pudo añadir el empleado al proyecto");
+		} else {
+			IO.println("Los campos están vacíos");
+		}
 		
 	}
 }

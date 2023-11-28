@@ -152,6 +152,10 @@ public class MenuEmpleado {
 			throw new EmpleadoException("No se pudo modificar al empleado correctamente");
 	}
 
+	/**
+	 * Método que añade un proyecto a un empleado
+	 * @param controller
+	 */
 	private static void addProyect(Controller controller) {
 		IO.print("ID de empleado que entra en proyecto: ");
 		Integer id = IO.readInt();
@@ -168,6 +172,10 @@ public class MenuEmpleado {
 		
 	}
 	
+	/**
+	 * Método que elimina un proyecto de un empleado
+	 * @param controller
+	 */
 	private static void deleteProyect(Controller controller) {
 		IO.print("ID del empleado que sale de un proyecto: ");
 		Integer id = IO.readInt();
