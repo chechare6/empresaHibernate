@@ -30,9 +30,18 @@ public class Proyecto {
 		this.nombre = nombre;
 	}
 
+	public Proyecto(Integer id, String nombre) {
+		this.id = id;
+		this.nombre = nombre;
+	}
+
 	public void addEmpleado(Empleado e) {
 		e.getProyecto().add(this);
 		this.getEmpleados().add(e);
+	}
+
+	public void removeEmpleado(Empleado e) {
+		this.getEmpleados().remove(e);
 	}
 
 	@Override

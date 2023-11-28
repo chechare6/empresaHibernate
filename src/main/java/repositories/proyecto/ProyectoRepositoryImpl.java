@@ -7,13 +7,15 @@ import IO.IO;
 import dao.HibernateManager;
 import exceptions.ProyectoException;
 import jakarta.persistence.TypedQuery;
+import models.Empleado;
 import models.Proyecto;
 
 public class ProyectoRepositoryImpl implements ProyectoRepository{
 
+	HibernateManager hb = HibernateManager.getInstance();
+	
 	@Override
 	public List<Proyecto> findAll() {
-		HibernateManager hb = HibernateManager.getInstance();
 		hb.open();
 		TypedQuery<Proyecto> query = hb.getEm().createNamedQuery("Proyecto.findAll", Proyecto.class);
 		List <Proyecto> list = query.getResultList();
@@ -23,7 +25,6 @@ public class ProyectoRepositoryImpl implements ProyectoRepository{
 
 	@Override
 	public Optional<Proyecto> findById(Integer id) {
-		HibernateManager hb = HibernateManager.getInstance();
 		hb.open();
 		Optional <Proyecto> dep = Optional.ofNullable(hb.getEm().find(Proyecto.class, id));
 		return dep;
@@ -31,7 +32,6 @@ public class ProyectoRepositoryImpl implements ProyectoRepository{
 
 	@Override
 	public Boolean save(Proyecto proy) {
-		HibernateManager hb = HibernateManager.getInstance();
 		hb.open();
 		hb.getTransaction().begin();
 		try {
@@ -50,7 +50,6 @@ public class ProyectoRepositoryImpl implements ProyectoRepository{
 
 	@Override
 	public Boolean delete(Proyecto p) {
-		HibernateManager hb = HibernateManager.getInstance();
 		hb.open();
 		hb.getTransaction().begin();
 		try {
@@ -70,6 +69,65 @@ public class ProyectoRepositoryImpl implements ProyectoRepository{
 			if(hb.getTransaction().isActive()) {
 				hb.getTransaction().rollback();
 			}
+		}
+	}
+
+	@Override
+	public Boolean update(Proyecto p) {
+		hb.open();
+		hb.getTransaction().begin();
+		try {
+			if(hb.getEm().find(Proyecto.class, p.getId()) == null)
+				throw new ProyectoException("No se encontró el proyecto con ID: " + p.getId());
+			Proyecto updateP = hb.getEm().find(Proyecto.class, p.getId());
+			updateP.setNombre(p.getNombre());
+			hb.getEm().merge(updateP);
+			hb.getTransaction().commit();
+			hb.close();
+			return true;
+		} catch (Exception e) {
+			throw new ProyectoException("Error al modificar el proyecto con ID: " + p.getId() + " - " + e.getMessage());
+		} finally {
+			if(hb.getTransaction().isActive())
+				hb.getTransaction().rollback();
+		}
+	}
+	
+	@Override
+	public boolean addEmpleado(Empleado e, Proyecto p) {
+		hb.open();
+		hb.getTransaction().begin();
+		try {
+			p = hb.getEm().find(Proyecto.class, p.getId());
+			e = hb.getEm().find(Empleado.class, e.getId());
+			p.addEmpleado(e);
+			hb.getEm().merge(p);
+			hb.getTransaction().commit();
+			hb.close();
+			return true;
+		} catch (Exception ex) {
+			throw new ProyectoException("No se pudo añadir empleado al proyecto con ID: " + p.getId() + " - " + ex.getMessage());
+		} finally {
+			if(hb.getTransaction().isActive())
+				hb.getTransaction().rollback();
+			hb.close();
+		}
+	}
+	
+	@Override
+	public boolean deleteEmpleado(Empleado e, Proyecto p) {
+		hb.open();
+		hb.getTransaction().begin();
+		try {
+			p = hb.getEm().find(Proyecto.class, p.getId());
+			e = hb.getEm().find(Empleado.class, e.getId());
+			p.removeEmpleado(e);
+			hb.getEm().merge(p);
+			hb.getTransaction().commit();
+			hb.close();
+			return true;
+		} catch (Exception ex) {
+			throw new ProyectoException("No se pudo eliminar empleado del proyecto con ID: " + p.getId() + " - " + ex.getMessage());
 		}
 	}
 

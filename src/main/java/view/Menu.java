@@ -20,7 +20,7 @@ public class Menu {
 				new ProyectoRepositoryImpl());
 		List<String> opciones;
 		while(true) {
-			opciones = List.of("BBDD Empresa ~ Hibernate:\n1. DEPARTAMENTOS", "2. EMPLEADOS", "3. PROYECTOS", "4. CERRAR");
+			opciones = List.of("BBDD Empresa ~ Hibernate:\n1. DEPARTAMENTOS", "2. EMPLEADOS", "3. PROYECTOS", "0. CERRAR");
 			IO.println(opciones);
 			int seleccionado = IO.readString().charAt(0);
 			switch (seleccionado) {
@@ -33,7 +33,7 @@ public class Menu {
 			case '3':
 				MenuProyecto.MenuProy(controller);
 				break;
-			case '4':
+			case '0':
 				IO.println("CERRANDO BBDD");
 				System.exit(0);
 				break;

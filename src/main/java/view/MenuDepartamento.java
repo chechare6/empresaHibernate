@@ -1,9 +1,11 @@
 package view;
 
 import java.util.List;
+import java.util.Optional;
 
 import IO.IO;
 import controller.Controller;
+import exceptions.DepartamentoException;
 import models.Departamento;
 import models.Empleado;
 import repositories.empleados.EmpleadosRepository;
@@ -13,21 +15,26 @@ public class MenuDepartamento {
 
 	public static void menuDep(Controller controller) {
 		while(true) {
-			List<String> opciones = List.of("DEPARTAMENTOS:\n1. VER", "2. AÑADIR", "3. ELIMINAR", "4. VOLVER");
+			List<String> opciones = List.of("DEPARTAMENTOS:\n1. VER","2. BUSCAR", "3. AÑADIR", "4. ELIMINAR","5. MODIFICAR", "0. VOLVER");
 			IO.println(opciones);
 			switch (IO.readString().charAt(0)) {
 			case '1':
 				verDepartamentos(controller);
 				break;
 			case '2':
+				searchDepartamento(controller);
+				break;
+			case '3':
 				String tryAdd = (addDepartamento(controller) ? "Se pudo añadir departamento" : "No se pudo añadir el nuevo departamento");
 				IO.println(tryAdd);
 				break;
-			case '3':
+			case '4':
 				String tryDelete = (deleteDepartamento(controller) ? "Se eliminó correctamente el departamento" : "No se pudo eliminar el departamento");
 				IO.println(tryDelete);
 				break;
-			case '4':
+			case '5':
+				updateDepartamentos(controller);
+			case '0':
 				Menu.main(null);
 				break;
 			default:
@@ -36,6 +43,7 @@ public class MenuDepartamento {
 		}
 	}
 	
+
 	/**
 	 * Método para ver todos los departamentos de 'hib_departamentos'
 	 * @param controller
@@ -45,6 +53,20 @@ public class MenuDepartamento {
 		for (Departamento departamento : departamentos) {
 			IO.println(departamento);
 		}
+	}
+	
+	/**
+	 * Método para buscar departamento según su ID
+	 * @param controller
+	 */
+	private static void searchDepartamento(Controller controller) {
+		IO.print("ID del departamento a buscar: ");
+		Integer id = IO.readInt();
+		Optional<Departamento> d = controller.getDepartamentoById(id);
+		if(d.isPresent())
+			IO.println(d.get());
+		else
+			IO.println("No se ha encontrado un departamento con la ID: " + id);
 	}
 	
 	/**
@@ -81,7 +103,7 @@ public class MenuDepartamento {
 		}		
 		return false;
 	}
-
+	
 	/**
 	 * Método que elimina un departamento (si existe) según ID
 	 * @param controller
@@ -94,4 +116,27 @@ public class MenuDepartamento {
 		return controller.deleteDepartamento(d);
 	}
 	
+	/**
+	 * Método para modificar los departamentos
+	 * @param controller
+	 */
+	private static void updateDepartamentos(Controller controller) {
+		IO.print("ID del departamento a modificar: ");
+		Integer id = IO.readInt();
+		IO.print("Nuevo nombre: ");
+		String nombre = IO.readString();
+		IO.print("Nuevo jefe: ");
+		Integer jefe = IO.readInt();
+		Optional<Empleado> newJefe = controller.getEmpleadoById(jefe);
+		Departamento d = null;
+		if(newJefe.isEmpty())
+			d = new Departamento(id, nombre);
+		else
+			d = new Departamento(id, nombre, newJefe);
+		if(controller.updateDepartamento(d)) {
+			IO.println("Departamento modificado correctamente");
+		} else {
+			throw new DepartamentoException("No se pudo modificar el epmleado correctamente");
+		}
+	}
 }

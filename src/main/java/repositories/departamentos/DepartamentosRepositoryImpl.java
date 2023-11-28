@@ -106,5 +106,35 @@ public class DepartamentosRepositoryImpl implements DepartamentosRepository {
 			hb.close();
 		}
 	}
+	
+	@Override
+	public Boolean update(Departamento d) {
+		hb.open();
+		try {
+			hb.getTransaction().begin();
+			if(hb.getEm().find(Departamento.class, d.getId()) == null)
+				throw new DepartamentoException("No se encontró el departamento");
+			if(d.getJefe() != null && d.getJefe().getId() != null) {
+				Empleado e = hb.getEm().find(Empleado.class, d.getJefe().getId());
+				if(e == null)
+					throw new DepartamentoException("No se ha encontrado jefe");
+				d.setJefe(e);
+			}
+			Departamento updateD = hb.getEm().merge(d);
+			if(updateD.getJefe() != null) {
+				Empleado updateJefe = updateD.getJefe();
+				hb.getEm().merge(updateJefe);
+			}
+			hb.getTransaction().commit();
+			hb.close();
+			return true;
+		} catch (Exception ex) {
+			throw new DepartamentoException("No se pudo modificar el departamento con ID: " + d.getId() + " - " + ex.getMessage());
+		} finally {
+			if(hb.getTransaction().isActive())
+				hb.getTransaction().rollback();
+			hb.close();
+		}
+	}
 
 }

@@ -54,16 +54,34 @@
 			this.departamento = departamento;
 		}
 
+		public Empleado(Integer id, String nombre, Double salario, Date nacimiento) {
+			this.id = id;
+			this.nombre = nombre;
+			this.salario = salario;
+			this.nacimiento = nacimiento;
+		}
+		
+		public Empleado(Integer id, String nombre, Double salario, Date nacimiento, Departamento departamento) {
+			this.id = id;
+			this.nombre = nombre;
+			this.salario = salario;
+			this.nacimiento = nacimiento;
+			this.departamento = departamento;
+		}
+		
 		public void addDepartamento(Departamento d) {
 			this.setDepartamento(d);
 			d.getEmpleados().add(this);
 		}
 	
 		public void addProyecto(Proyecto p) {
-			this.getProyecto().add(p);
 			p.getEmpleados().add(this);
 		}
 	
+		public void removeProyecto(Proyecto p) {
+			this.getProyecto().remove(p);			
+		}
+
 		@Override
 		public String toString() {
 			return String.format("Empleado [ID: %d, Nombre: %s, Salario: %s, Fecha de nacimiento: %s, Departamento: %s]", id, nombre, salario, nacimiento, ((departamento != null) ? departamento.getNombre() : "No está asignado a ningún departamento"));
@@ -77,4 +95,5 @@
 		public boolean equals(Empleado e) {
 			return e != null && e.getId() != null && e.getId() == id;
 		}
+
 	}

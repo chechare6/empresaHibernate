@@ -52,4 +52,18 @@ public class Departamento {
 	public String toString() {
 		return String.format("Departamento [ID:%d, Nombre: %s, Jefe: %s]", id, nombre, (jefe != null) ? jefe.getNombre() : "No hay jefe asignado");
 	}
+
+	public Departamento(Integer id, String nombre) {
+		this.id = id;
+		this.nombre = nombre;
+	}
+
+	public Departamento(Integer id, String nombre, Optional<Empleado> newJefe) {
+		this.id = id;
+		this.nombre = nombre;
+		if(newJefe.isPresent())
+			this.jefe = newJefe.get();
+		else
+			this.jefe = null;
+	}
 }
